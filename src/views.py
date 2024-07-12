@@ -2,8 +2,9 @@ import json
 import logging
 
 from config import LOGS_VIEWS_DIR
+from excel_reader import read_excel_to_list
 from src.utils import (filtering_operations_by_date, get_currencies, get_operations, get_stocks, get_time_now,
-                       get_user_settings, greetings, read_excel_to_list, top_five_operations)
+                       get_user_settings, greetings, top_five_operations)
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)

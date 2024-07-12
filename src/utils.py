@@ -4,11 +4,10 @@ import logging
 import os
 from collections import defaultdict
 
-import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-from config import DATA_DIR, LOGS_UTILS_DIR, ROOT_DIR
+from config import LOGS_UTILS_DIR, ROOT_DIR
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -48,21 +47,6 @@ def greetings(time):
     logger.info("Функция завершила работу и записала приветствие в словарь")
     greeting_time = {"greeting": greeting}
     return greeting_time
-
-
-def read_excel_to_list():
-    """
-    конвертирует excel файл в список
-    :return: List
-    """
-    logging.info("Функция начала работу")
-    try:
-        excel_file = DATA_DIR + "/operations.xls"
-        read = pd.read_excel(excel_file).to_json(orient="records")
-        result = json.loads(read)
-        return result
-    except FileNotFoundError:
-        logger.error("Произошла ошибка. Файл не найден")
 
 
 def filtering_operations_by_date(operations_data, date_now):

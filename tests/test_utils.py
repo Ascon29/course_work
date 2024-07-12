@@ -4,7 +4,11 @@ from unittest.mock import patch
 import pytest
 
 from src.utils import (filtering_operations_by_date, get_currencies, get_operations, get_stocks, get_user_settings,
-                       greetings, read_excel_to_list, top_five_operations)
+                       greetings, top_five_operations)
+
+
+def test_greeting_with_conftest(test_greeteng):
+    assert greetings("2021-11-12 06:00:00") == test_greeteng
 
 
 @pytest.mark.parametrize(
@@ -18,34 +22,6 @@ from src.utils import (filtering_operations_by_date, get_currencies, get_operati
 )
 def test_greeting(time, expected):
     assert greetings(time) == expected
-
-
-@patch("json.loads")
-def test_read_excel_to_list(mock_json):
-    mock_json.return_value = [
-        {
-            "Дата операции": "03.01.2018 14:55:21",
-            "Дата платежа": "05.01.2018",
-            "Номер карты": "*7197",
-            "Статус": "OK",
-            "Сумма операции": -21.0,
-            "Валюта операции": "RUB",
-            "Сумма платежа": -21.0,
-            "Валюта платежа": "RUB",
-        }
-    ]
-    assert read_excel_to_list() == [
-        {
-            "Дата операции": "03.01.2018 14:55:21",
-            "Дата платежа": "05.01.2018",
-            "Номер карты": "*7197",
-            "Статус": "OK",
-            "Сумма операции": -21.0,
-            "Валюта операции": "RUB",
-            "Сумма платежа": -21.0,
-            "Валюта платежа": "RUB",
-        }
-    ]
 
 
 @pytest.mark.parametrize(

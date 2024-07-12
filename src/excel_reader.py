@@ -18,12 +18,8 @@ def read_excel_to_dataframe(excel_file=DATA_DIR + "/operations.xls"):
 def read_excel_to_list(excel_file=DATA_DIR + "/operations.xls"):
     """
     конвертирует excel файл в список
-    :param excel_file: путь до excel файла
     :return: List
     """
-    read = pd.read_excel(excel_file).to_json(orient="records", indent=4, force_ascii=False)
-    data_list = list(json.loads(read))
-    return data_list
-
-
-print(read_excel_to_list())
+    read = pd.read_excel(excel_file).to_json(orient="records")
+    result = json.loads(read)
+    return result

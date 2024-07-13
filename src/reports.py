@@ -55,7 +55,7 @@ def filtering_by_date(operations, date):
     """
     logger.info("Функция начала работу")
     result = []
-    date_get = datetime.datetime.strptime(date, "%d.%m.%Y %H:%M:%S")
+    date_get = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
     deadline = date_get - datetime.timedelta(days=90)
     logger.info("Функция фильтрует операции за последние 3 месяца")
     for operation in operations:

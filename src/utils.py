@@ -7,7 +7,7 @@ from collections import defaultdict
 import requests
 from dotenv import load_dotenv
 
-from config import LOGS_UTILS_DIR, ROOT_DIR
+from config import DATA_DIR, LOGS_UTILS_DIR
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -134,7 +134,7 @@ def get_user_settings():
     конвертирует json-объект в python
     :return: словарь
     """
-    settings = ROOT_DIR + "/user_settings.json"
+    settings = DATA_DIR + "/user_settings.json"
     logger.info("Функция начала работу. Идет открытие json-файла")
     try:
         with open(settings, "r", encoding="utf-8") as file:

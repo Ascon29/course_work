@@ -107,15 +107,15 @@ def test_filtering_operations_by_date(data, time, expected):
                     "Сумма платежа": -83.0,
                 },
             ],
-            [  # КОНКРЕТНО ЭТА ЧАСТЬ ТЕСТА ПРОХОДИТ ЧЕРЕЗ РАЗ, ПОТОМУ ЧТО ФУНКЦИЯ ИСПОЛЬЗУЕТ МНОЖЕСТВО
-                {"last_digits": "4556", "total_spent": -83, "cashback": 0.83},
+            [
                 {"last_digits": "7197", "total_spent": -250, "cashback": 2.5},
+                {"last_digits": "4556", "total_spent": -83, "cashback": 0.83},
             ],
         ),
         (
             [
-                {"Номер карты": "*7197", "Сумма платежа": 100.0},
                 {"Номер карты": "*4556", "Сумма платежа": -83.0},
+                {"Номер карты": "*7197", "Сумма платежа": 100.0},
             ],
             [{"last_digits": "4556", "total_spent": -83, "cashback": 0.83}],
         ),
@@ -161,6 +161,10 @@ def test_get_user_settings(mock_json):
         "user_stocks": ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"],
     }
     assert get_user_settings() == (["USD", "EUR"], ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"])
+
+
+def test_get_user_settings_error():
+    assert get_user_settings("not_found.json") == "Файл not_found.json не найден"
 
 
 @patch("requests.get")

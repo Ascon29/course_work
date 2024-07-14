@@ -7,7 +7,7 @@ from collections import defaultdict
 import requests
 from dotenv import load_dotenv
 
-from config import LOGS_UTILS_DIR, ROOT_DIR
+from config import DATA_DIR, LOGS_UTILS_DIR
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -79,7 +79,7 @@ def filtering_operations_by_date(operations_data, date_now):
 
 def get_operations(operations):
     """
-    функция использует отфильтрованный список по дате и возвращает По каждой карте:
+    функция принимает список операций и возвращает По каждой карте:
             - последние 4 цифры карты;
             - общая сумма расходов;
             - кешбэк (1 рубль на каждые 100 рублей)
@@ -87,7 +87,10 @@ def get_operations(operations):
     :return: список словарей
     """
     logger.info("Функция начала работу")
-    card_numbers = list(set(i["Номер карты"] for i in operations if i["Номер карты"] is not None))
+    card_numbers = []
+    for i in operations:
+        if i["Номер карты"] and i["Номер карты"] not in card_numbers:
+            card_numbers.append(i["Номер карты"])
     payments = defaultdict(int)
     logger.info("Функция обрабатывает данные")
     for card_number in card_numbers:
@@ -107,7 +110,7 @@ def get_operations(operations):
 
 def top_five_operations(operations):
     """
-    функция использует отфильтрованный список по дате
+    функция принимает список операций
     возвращает топ-5 транзакций по сумме платежа
     :param operations: отфильтрованный список словарей
     :return: список словарей
@@ -129,25 +132,28 @@ def top_five_operations(operations):
     return result
 
 
-def get_user_settings():
+def get_user_settings(settings=os.path.join(DATA_DIR, "user_settings.json")):
     """
     конвертирует json-объект в python
     :return: словарь
     """
-    settings = ROOT_DIR + "/user_settings.json"
-    logger.info("Функция начала работу. Идет открытие json-файла")
     try:
-        with open(settings, "r", encoding="utf-8") as file:
-            user_settings = json.load(file)
-        logger.info("Функция успешно завершила работу")
-    except Exception as e:
-        logger.error(f"Произошла ошибка {e}")
-    return user_settings["user_currencies"], user_settings["user_stocks"]
+        logger.info("Функция начала работу. Идет открытие json-файла")
+        if os.path.exists(settings):
+            with open(settings, "r", encoding="utf-8") as file:
+                user_settings = json.load(file)
+            logger.info("Функция успешно завершила работу")
+            return user_settings["user_currencies"], user_settings["user_stocks"]
+        else:
+            logger.critical("Произошла ошибка. Файл не найден")
+            raise FileNotFoundError
+    except FileNotFoundError:
+        return f"Файл {settings} не найден"
 
 
 def get_currencies(user_currencies):
     """
-    использует настройки пользователя
+    принимает настройки пользователя
     возвращает курсы валют
     :param: список интересующих валют
     :return: список курса валют полученный через API

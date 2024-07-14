@@ -1,10 +1,11 @@
 import json
 import logging
+import os
 
-from config import LOGS_VIEWS_DIR
-from excel_reader import read_excel_to_list
-from src.utils import (filtering_operations_by_date, get_currencies, get_operations, get_stocks, get_time_now,
-                       get_user_settings, greetings, top_five_operations)
+from config import DATA_DIR, LOGS_VIEWS_DIR
+from src.excel_reader import read_excel_to_list
+from src.utils import (filtering_operations_by_date, get_currencies, get_operations, get_stocks, get_user_settings,
+                       greetings, top_five_operations)
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -14,20 +15,19 @@ file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
 
-def main_page_function():
+def main_page_function(date):
     """
     функция для запуска главной страницы
     :return: json-ответ
     """
     try:
         logger.info("Функция начала раюоту. Запускает набор функций, необходимых для работы")
-        current_time = get_time_now()
-        greeting = greetings(current_time)
+        greeting = greetings(date)
         data_from_json = read_excel_to_list()
-        filtered_data = filtering_operations_by_date(data_from_json, current_time)
+        filtered_data = filtering_operations_by_date(data_from_json, date)
         card_operations = get_operations(filtered_data)
         top_five = top_five_operations(filtered_data)
-        user_settings = get_user_settings()
+        user_settings = get_user_settings(settings=os.path.join(DATA_DIR, "user_settings.json"))
         user_currencies = get_currencies(user_settings[0])
         user_stocks = get_stocks(user_settings[1])
 
@@ -48,5 +48,5 @@ def main_page_function():
         logger.error(f"Произошла ошибка {e}")
 
 
-if __name__ == "__main__":
-    print(main_page_function())
+# if __name__ == "__main__":
+#     print(main_page_function('2021-11-17 11:15:27'))

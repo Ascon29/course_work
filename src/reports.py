@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+import os.path
 import re
 from functools import wraps
 
@@ -16,13 +17,16 @@ file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
 
-def decor(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs).to_dict(orient="records")
-        with open(DATA_DIR + "/spending.json", "w", encoding="utf-8") as file:
-            json.dump(result, file, ensure_ascii=False, indent=4)
-        return result
+def log(filename="spending.json"):
+    def wrapper(func):
+        @wraps(func)
+        def inner(*args, **kwargs):
+            result = func(*args, **kwargs).to_dict(orient="records")
+            with open(os.path.join(DATA_DIR, filename), "w", encoding="utf-8") as file:
+                json.dump(result, file, ensure_ascii=False, indent=4)
+            return result
+
+        return inner
 
     return wrapper
 
@@ -66,7 +70,7 @@ def filtering_by_date(operations, date):
     return result
 
 
-@decor
+@log()
 def spending_by_category(operations_df, category, date):
     """
     Функция для подсчета трат по заданной категории в течении 3-х месяцев от заданной даты.

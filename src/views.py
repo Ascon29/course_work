@@ -3,8 +3,8 @@ import logging
 
 from config import LOGS_VIEWS_DIR
 from excel_reader import read_excel_to_list
-from src.utils import (filtering_operations_by_date, get_currencies, get_operations, get_stocks, get_time_now,
-                       get_user_settings, greetings, top_five_operations)
+from src.utils import (filtering_operations_by_date, get_currencies, get_operations, get_stocks, get_user_settings,
+                       greetings, top_five_operations)
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
@@ -14,17 +14,16 @@ file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
 
-def main_page_function():
+def main_page_function(date):
     """
     функция для запуска главной страницы
     :return: json-ответ
     """
     try:
         logger.info("Функция начала раюоту. Запускает набор функций, необходимых для работы")
-        current_time = get_time_now()
-        greeting = greetings(current_time)
+        greeting = greetings(date)
         data_from_json = read_excel_to_list()
-        filtered_data = filtering_operations_by_date(data_from_json, current_time)
+        filtered_data = filtering_operations_by_date(data_from_json, date)
         card_operations = get_operations(filtered_data)
         top_five = top_five_operations(filtered_data)
         user_settings = get_user_settings()

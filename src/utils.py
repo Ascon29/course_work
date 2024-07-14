@@ -79,7 +79,7 @@ def filtering_operations_by_date(operations_data, date_now):
 
 def get_operations(operations):
     """
-    функция использует отфильтрованный список по дате и возвращает По каждой карте:
+    функция принимает список операций и возвращает По каждой карте:
             - последние 4 цифры карты;
             - общая сумма расходов;
             - кешбэк (1 рубль на каждые 100 рублей)
@@ -87,7 +87,10 @@ def get_operations(operations):
     :return: список словарей
     """
     logger.info("Функция начала работу")
-    card_numbers = list(set(i["Номер карты"] for i in operations if i["Номер карты"] is not None))
+    card_numbers = []
+    for i in operations:
+        if i["Номер карты"] and i["Номер карты"] not in card_numbers:
+            card_numbers.append(i["Номер карты"])
     payments = defaultdict(int)
     logger.info("Функция обрабатывает данные")
     for card_number in card_numbers:
@@ -107,7 +110,7 @@ def get_operations(operations):
 
 def top_five_operations(operations):
     """
-    функция использует отфильтрованный список по дате
+    функция принимает список операций
     возвращает топ-5 транзакций по сумме платежа
     :param operations: отфильтрованный список словарей
     :return: список словарей
@@ -147,7 +150,7 @@ def get_user_settings():
 
 def get_currencies(user_currencies):
     """
-    использует настройки пользователя
+    принимает настройки пользователя
     возвращает курсы валют
     :param: список интересующих валют
     :return: список курса валют полученный через API

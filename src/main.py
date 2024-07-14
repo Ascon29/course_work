@@ -22,9 +22,7 @@ def main():
     operations_dataframe = read_excel_to_dataframe()
     category = "супермаркет"
     date_filter = "2021-07-13 04:20:34"
-    print(
-        f"Результат функции отчетов трат по категориям записан в файл: {os.path.join(DATA_DIR, 'spending.json')}"
-    )
+    print(f"Результат функции отчетов трат по категориям записан в файл: {os.path.join(DATA_DIR, 'spending.json')}")
     spending_by_category(operations_dataframe, category, date=date_filter)
     print("------------------------------------------------------------------------------------------------------")
 

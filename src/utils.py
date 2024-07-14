@@ -132,20 +132,23 @@ def top_five_operations(operations):
     return result
 
 
-def get_user_settings():
+def get_user_settings(settings=os.path.join(DATA_DIR, "user_settings.json")):
     """
     конвертирует json-объект в python
     :return: словарь
     """
-    settings = DATA_DIR + "/user_settings.json"
-    logger.info("Функция начала работу. Идет открытие json-файла")
     try:
-        with open(settings, "r", encoding="utf-8") as file:
-            user_settings = json.load(file)
-        logger.info("Функция успешно завершила работу")
-    except Exception as e:
-        logger.error(f"Произошла ошибка {e}")
-    return user_settings["user_currencies"], user_settings["user_stocks"]
+        logger.info("Функция начала работу. Идет открытие json-файла")
+        if os.path.exists(settings):
+            with open(settings, "r", encoding="utf-8") as file:
+                user_settings = json.load(file)
+            logger.info("Функция успешно завершила работу")
+            return user_settings["user_currencies"], user_settings["user_stocks"]
+        else:
+            logger.critical("Произошла ошибка. Файл не найден")
+            raise FileNotFoundError
+    except FileNotFoundError:
+        return f"Файл {settings} не найден"
 
 
 def get_currencies(user_currencies):

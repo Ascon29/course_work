@@ -163,6 +163,10 @@ def test_get_user_settings(mock_json):
     assert get_user_settings() == (["USD", "EUR"], ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"])
 
 
+def test_get_user_settings_error():
+    assert get_user_settings("not_found.json") == "Файл not_found.json не найден"
+
+
 @patch("requests.get")
 @patch.dict(os.environ, {"API_KEY_CURS": "api_key"})
 def test_get_currencies(mock_get):
